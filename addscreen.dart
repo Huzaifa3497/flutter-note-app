@@ -10,11 +10,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController editController = TextEditingController();
 
-  @override
-  void dispose() {
-    titleController.dispose();
-    editController.dispose();
-    super.dispose();
+  void addNote() {
+    FirebaseFirestore.instance.collection('notes').add({
+      'msg': editController.text,
+      'title': titleController.text,
+    });
+
+    Navigator.pop(context); // Close the add note screen
   }
 
   @override
@@ -38,20 +40,14 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               controller: editController,
               maxLines: null,
               decoration: InputDecoration(labelText: "Add your note"),
-              onChanged: (text) {
-                addNote(); // Call the addNote function whenever text changes
-              },
+            ),
+            ElevatedButton(
+              onPressed: addNote,
+              child: Text("Add"),
             ),
           ],
         ),
       ),
     );
-  }
-
-  void addNote() {
-    FirebaseFirestore.instance.collection('notes').add({
-      'msg': editController.text,
-      'title': titleController.text,
-    });
   }
 }
